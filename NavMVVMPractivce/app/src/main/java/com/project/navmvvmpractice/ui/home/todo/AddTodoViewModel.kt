@@ -2,6 +2,7 @@ package com.project.navmvvmpractice.ui.home.todo
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.project.navmvvmpractice.data.entites.Todo
 import com.project.navmvvmpractice.data.remote.home.todo.AddTodoListener
 import com.project.navmvvmpractice.room.dao.Database
@@ -22,7 +23,7 @@ class AddTodoViewModel @Inject constructor(private val database: Database, priva
         addTodoListener!!.onCancelClicked()
     }
     fun onConfirmClicked(){
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             val todo = todo.value
             if(todo.isNullOrEmpty()){
                 addTodoListener!!.onFailure("내용을 입력하세요.")

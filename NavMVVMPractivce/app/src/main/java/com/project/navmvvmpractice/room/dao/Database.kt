@@ -6,7 +6,7 @@ import com.project.navmvvmpractice.data.entites.Todo
 import com.project.navmvvmpractice.data.entites.User
 
 
-@Database(entities = [User::class, Todo::class], version = 3)
+@Database(entities = [User::class, Todo::class], version = 6)
 
 abstract class Database:RoomDatabase() {
     abstract fun userDao(): UserDao
