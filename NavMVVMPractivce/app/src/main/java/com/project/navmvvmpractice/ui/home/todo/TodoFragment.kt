@@ -34,6 +34,12 @@ class TodoFragment : BaseFragment<FragmentTodoBinding>(R.layout.fragment_todo), 
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        pagingAdapter.refresh()
+    }
+
     private fun initRecycler(){
         binding.rcvTodo.apply {
             adapter = pagingAdapter

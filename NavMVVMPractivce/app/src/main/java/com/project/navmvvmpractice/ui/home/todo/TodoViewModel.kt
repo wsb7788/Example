@@ -34,14 +34,10 @@ class TodoViewModel @Inject constructor(private val database: Database, private 
             try {
 
                 database.todoDao().update(Todo(data.index,data.id,data.task, !data.complete ))
-                todoListener?.let {
-                    it.onSuccess("성공")
-                }
+                todoListener?.onSuccess("성공")
 
             }catch (e:Exception){
-                todoListener?.let {
-                    it.onFailure(e.message!!)
-                }
+                todoListener?.onFailure(e.message!!)
             }
         }
 

@@ -14,7 +14,12 @@ abstract class BaseActivity<B: ViewDataBinding>(@LayoutRes private val layoutId:
 
         binding = DataBindingUtil.setContentView(this,layoutId)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
         initView()
+
     }
 
     abstract fun initView()

@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.project.navmvvmpractice.data.entites.User
 import com.project.navmvvmpractice.data.remote.login.LoginListener
 import com.project.navmvvmpractice.data.remote.login.SignUpListener
@@ -28,20 +29,28 @@ class LoginViewModel @Inject constructor(private val userDatabase:Database, priv
 
 
     fun onLoginClicked() {
-        CoroutineScope(Dispatchers.Main).launch {
+        if(id.value.isNullOrEmpty()){
+            signUpListener?.onFailure("아이디를 입력하세요")
+            return
+        }
+        if(pw.value.isNullOrEmpty()){
+            signUpListener?.onFailure("비밀번호를 입력하세요")
+            return
+        }
+        viewModelScope.launch {
             try {
                 val id = id.value
                 val pw = pw.value
                 val result = userDatabase.userDao().findId(id!!)
                 if(result != null && result.pw == pw!!){
                     dataStoreManager.saveId(id)
-                    loginListener!!.onLoginSuccess()
+                    loginListener?.onLoginSuccess()
                     return@launch
                 }
-                loginListener!!.onLoginFailure("아이디 및 비밀번호가 일치하지 않습니다.")
+                loginListener?.onLoginFailure("아이디 및 비밀번호가 일치하지 않습니다.")
             }
             catch (e: Exception){
-                loginListener!!.onLoginFailure(e.message!!)
+                loginListener?.onLoginFailure(e.message!!)
             }
         }
     }
@@ -52,14 +61,14 @@ class LoginViewModel @Inject constructor(private val userDatabase:Database, priv
 
     fun onConfirmClicked(){
         if(id.value.isNullOrEmpty()){
-            signUpListener!!.onFailure("아이디를 입력하세요")
+            signUpListener?.onFailure("아이디를 입력하세요")
             return
         }
         if(pw.value.isNullOrEmpty()){
-            signUpListener!!.onFailure("비밀번호를 입력하세요")
+            signUpListener?.onFailure("비밀번호를 입력하세요")
             return
         }
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             try {
                 val id = id.value
                 val pw = pw.value
@@ -69,15 +78,15 @@ class LoginViewModel @Inject constructor(private val userDatabase:Database, priv
                     signUpListener!!.onSuccess()
                     return@launch
                 }
-                signUpListener!!.onFailure("아이디가 이미 존재합니다.")
+                signUpListener?.onFailure("아이디가 이미 존재합니다.")
             }catch (e:Exception){
-                signUpListener!!.onFailure(e.message!!)
+                signUpListener?.onFailure(e.message!!)
             }
         }
 
     }
     fun onCancelClicked(){
-        signUpListener!!.onCancelClicked()
+        signUpListener?.onCancelClicked()
     }
 
 }
